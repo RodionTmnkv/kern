@@ -61,22 +61,36 @@ export type ButtonProps = ButtonAsButton | ButtonAsChild;
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ({ className, variant, size, asChild, isLoading, disabled, children, ...props }, ref) => {
-        const Comp = asChild ? Slot : 'button';
         const isDisabled = isLoading || disabled;
+        const styles = cn(
+            buttonStyles({ variant, size }),
+            className,
+            isDisabled && 'pointer-events-none opacity-50'
+        );
 
+        // Ветка для asChild (полиморфизм)
+        if (asChild) {
+            return (
+                <Slot
+                    ref={ref}
+                    className={styles}
+                    aria-disabled={isDisabled}
+                    {...props}
+                >
+                    {children}
+                </Slot>
+            );
+        }
+
+        // Обычная кнопка
         return (
-            <Comp
+            <button
                 ref={ref}
-                className={cn(
-                    buttonStyles({ variant, size }),
-                    className,
-                    isDisabled && 'pointer-events-none opacity-50'
-                )}
-                disabled={!asChild ? isDisabled : undefined}
-                aria-disabled={isDisabled}
-                {...(props as ComponentPropsWithoutRef<'button'>)}
+                className={styles}
+                disabled={isDisabled}
+                {...props}
             >
-                {isLoading && !asChild && (
+                {isLoading && (
                     <svg
                         className="mr-2 h-4 w-4 animate-spin"
                         xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +113,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                     </svg>
                 )}
                 {children}
-            </Comp>
+            </button>
         );
     },
 );
