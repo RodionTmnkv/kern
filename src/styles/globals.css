@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+:root {
+    --radix-toast-swipe-end-x: 0px;
+}
+
 @theme {
     --color-background: oklch(1 0 0);
     --color-foreground: oklch(0.13 0.02 260);
@@ -46,4 +50,17 @@
 @keyframes content-out {
     from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     to { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+}
+
+@keyframes slide-in-from-right {
+    from { transform: translateX(calc(100% + 1rem)); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slide-out-to-right {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(calc(100% + 1rem)); opacity: 0; }
+}
+@keyframes swipe-out {
+    from { transform: translateX(var(--radix-toast-swipe-end-x, 100%)); }
+    to { transform: translateX(calc(100% + 1rem)); }
 }
