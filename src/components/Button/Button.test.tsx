@@ -29,4 +29,13 @@ describe('Button', () => {
         const { container } = render(<Button>Accessible</Button>);
         expect(await axe(container)).toHaveNoViolations();
     });
+
+    it('renders loading state and disables interaction', () => {
+        render(<Button isLoading>Submitting</Button>);
+
+        const button = screen.getByRole('button', { name: /submitting/i });
+
+        expect(button).toBeDisabled();
+        expect(button.querySelector('.animate-spin')).toBeInTheDocument();
+    });
 });
